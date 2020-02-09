@@ -29,11 +29,13 @@ services:
 
     splash{{i}}:
         image: scrapinghub/splash:{{ cookiecutter.splash_version }}
+        deploy:
+            resources:
+                limits:
+                    memory: {{ mem_limit }}
         command: --max-timeout {{ max_timeout }} --slots {{ splash_slots }} --maxrss {{ maxrss }} --verbosity {{ verbosity }}
         expose:
             - 8050
-        limits:
-            memory: {{ mem_limit }}
         restart_policy:
             condition: on-failure
             delay: 5s
