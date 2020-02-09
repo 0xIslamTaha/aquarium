@@ -4,10 +4,9 @@
 {% set maxrss = cookiecutter.maxrss_mb | int %}
 {% set mem_limit = "%dm" | format(maxrss * 1.4) %}
 {% set memswap_limit = "%dm" | format(maxrss * 1.8) %}
-{% set tor = cookiecutter.tor | int %}
 {% set verbosity = cookiecutter.splash_verbosity %}
 
-version: '2'
+version: '3'
 
 services:
     haproxy:
@@ -18,12 +17,14 @@ services:
 
             # splash
             - "8050:8050"
-        links:
+        depends_on:
             {%- for i in range(num_splashes) %}
             - splash{{i}}
             {%- endfor %}
         volumes:
             - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+        network:
+            - splash_cluster_network
 
     {%- for i in range(num_splashes) %}
 
@@ -35,25 +36,9 @@ services:
         mem_limit: {{ mem_limit }}
         memswap_limit: {{ memswap_limit }}
         restart: always
-
-        {%- if tor %}
-        links:
-            - tor
         volumes:
-            - ./proxy-profiles:/etc/splash/proxy-profiles:ro
             - ./filters:/etc/splash/filters:ro
-        {%- endif %}
+        network:
+            - splash_cluster_network
 
     {%- endfor %}
-
-
-    {% if tor %}
-    tor:
-        image: jess/tor-proxy
-        expose:
-            - 9050
-        logging:
-            driver: "none"
-        restart: always
-
-    {% endif %}

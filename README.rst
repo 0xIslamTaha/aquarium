@@ -1,6 +1,6 @@
 Aquarium
 ========
-
+** UPDATE TO DOCKERCOPOSER V3**
 Aquarium is a cookiecuter_ template for hassle-free
 `Docker Compose`_ + Splash_ setup. Think of it as a Splash instance
 with extra features and without common pitfalls.
