@@ -10,7 +10,6 @@
     "splash_slots": 5,
     "stats_enabled": 1,
     "stats_auth": "admin:adminpass",
-    "tor": 1,
 
     "_copy_without_render": [
         "*filters/*.txt"
