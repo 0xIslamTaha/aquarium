@@ -22,8 +22,8 @@ services:
             {%- endfor %}
         volumes:
             - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-        network:
-            - splash_cluster_network
+        networks:
+            splash_cluster_network: {}
 
     {%- for i in range(num_splashes) %}
 
@@ -33,16 +33,16 @@ services:
             resources:
                 limits:
                     memory: {{ mem_limit }}
+            restart_policy:
+                condition: on-failure
+                delay: 5s
         command: --max-timeout {{ max_timeout }} --slots {{ splash_slots }} --maxrss {{ maxrss }} --verbosity {{ verbosity }}
         expose:
             - 8050
-        restart_policy:
-            condition: on-failure
-            delay: 5s
         volumes:
             - ./filters:/etc/splash/filters:ro
         networks:
-            - splash_cluster_network: {}
+            splash_cluster_network: {}
 
     {%- endfor %}
 
